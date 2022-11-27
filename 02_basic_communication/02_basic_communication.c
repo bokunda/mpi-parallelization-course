@@ -1,3 +1,10 @@
+/********************************************************
+Example 02: Basic communication
+Show how to use MPI_Send() and MPI_Recv() routines.
+
+Idea is to send data to all processors using a for loop.
+*********************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <mpi.h>

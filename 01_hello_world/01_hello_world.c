@@ -1,3 +1,16 @@
+/********************************************************
+Example 01: Hello World
+Show basic MPI routines.
+- MPI_Init()
+- MPI_Comm_rank()
+- MPI_Comm_size()
+- MPI_Finalize()
+
+And use default communicator:
+- MPI_COMM_WORLD
+
+Idea is to send data to all processors using a for loop.
+*********************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include "mpi.h"
