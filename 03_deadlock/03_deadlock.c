@@ -1,6 +1,6 @@
 /************************************************************************
-Example 03: Deadloop example
-Show how to create deadloop using a MPI_Send() and MPI_Recv() routines.
+Example 03: Deadlock example
+Show how to create Deadlock using a MPI_Send() and MPI_Recv() routines.
 ************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
