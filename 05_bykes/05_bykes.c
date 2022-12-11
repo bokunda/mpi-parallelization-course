@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <limits.h>
 #include "mpi.h"
 
 typedef struct distances {
@@ -9,9 +10,21 @@ typedef struct distances {
     int distance;
 } DISTANCE;
 
-DISTANCE* AllocateDistances(int n)
+DISTANCE* AllocateDistances(long n)
 {
-    return (DISTANCE*)malloc(n * sizeof(DISTANCE));
+    DISTANCE* array = (DISTANCE*)malloc(n * sizeof(DISTANCE));
+    for (long i = 0; i < n; i++)
+    {
+        array[i].first = 0;
+        array[i].second = 0;
+        array[i].distance = 0;
+    }
+    return array;
+}
+
+void DoWork(DISTANCE *distances, int n)
+{
+    // TODO
 }
 
 int main(int argc, char **argv)
@@ -32,30 +45,31 @@ int main(int argc, char **argv)
 
     MPI_Type_create_struct(count, lengths, displacements, types, &MPI_DISTANCE);
     MPI_Type_commit(&MPI_DISTANCE);
-
-    int n = 10;
-
-    DISTANCE *distances;
-    distances = AllocateDistances(n);
     
+    // Scan and sand the data
+    int n;
+    DISTANCE *distances;
     if (rank == 0)
     {
+        scanf("%d", &n);
+        distances = AllocateDistances(n);
         for (int i = 0; i < n; i++) 
         {
-            distances[i].first = i * n + 1;
-            distances[i].second = i * n + 2;
-            distances[i].distance = i * n + 3;
+            scanf("%d %d %d", &distances[i].first, &distances[i].second, &distances[i].distance);
         }   
     }
 
+    MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    if (rank != 0)
+    {
+        distances = AllocateDistances(n);
+    }
     MPI_Bcast(distances, n, MPI_DISTANCE, 0, MPI_COMM_WORLD);
 
-    if (rank == 2)
+    // Do Work
+    if (rank == 0)
     {
-        for (int i = 0; i < n; i++)
-        {
-            printf("rank: %d - %d\n", rank, distances[i].distance);
-        }
+        DoWork(distances, n-1);
     }
     
     MPI_Finalize();
